@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://c854p67ohbrw0"]
+
+[ext_resource type="Texture2D" uid="uid://barc87jw2ueii" path="res://assets/sprites/poker table design.jpg" id="1_4fu0r"]
+[ext_resource type="Script" uid="uid://db28w7f3ggu01" path="res://scripts/blackjack.gd" id="1_f2nv2"]
+[ext_resource type="PackedScene" uid="uid://1mxss2kjiiqe" path="res://scenes/deck.tscn" id="2_kvb06"]
+[ext_resource type="Script" uid="uid://dlpulgegbm5mb" path="res://scripts/card_manager.gd" id="2_vyxl8"]
+[ext_resource type="Script" uid="uid://bkbgsjrei0paf" path="res://scripts/input_manager.gd" id="4_4fu0r"]
+[ext_resource type="FontFile" uid="uid://b6kh2h5es47us" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="6_7luxg"]
+
+[node name="Blackjack" type="Node2D"]
+script = ExtResource("1_f2nv2")
+
+[node name="PokerTableDesign" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(960, 540)
+scale = Vector2(0.64, 0.54)
+texture = ExtResource("1_4fu0r")
+
+[node name="CardManager" type="Node2D" parent="."]
+script = ExtResource("2_vyxl8")
+
+[node name="Deck" parent="." instance=ExtResource("2_kvb06")]
+position = Vector2(1600, 540)
+
+[node name="InputManager" type="Node2D" parent="."]
+script = ExtResource("4_4fu0r")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_left = 45.0
+offset_top = 631.0
+offset_right = 899.0
+offset_bottom = 756.0
+theme_override_fonts/normal_font = ExtResource("6_7luxg")
+theme_override_font_sizes/normal_font_size = 64
+text = "Player score: "
