@@ -6,6 +6,10 @@ var dealer_card_stack: CardStack
 var center_screen_x: float
 
 @onready var deck: Deck = $Deck
+@onready var player_ui: Control = $PlayerUI
+@onready var scores: VBoxContainer = $Scores
+@onready var player_score: RichTextLabel = $"Scores/Player Score"
+@onready var dealer_score: RichTextLabel = $"Scores/Dealer Score"
 @onready var hit_button: Button = $PlayerUI/HBoxContainer/Hit
 @onready var stand_button: Button = $PlayerUI/HBoxContainer/Stand
 
@@ -39,6 +43,7 @@ func setup_game() -> void:
 	deck.deck.shuffle()
 
 	draw_starting_hands()
+	toggle_buttons_on(true)
 
 func draw_starting_hands() -> void:
 	# Player gets 2 cards
@@ -82,14 +87,27 @@ func game_loop() -> void:
 func on_hit_pressed() -> void:
 	deck.draw_card()
 	player_card_stack.update_score()
-	if player_card_stack.lost_game():
-		someone_stands()
+	if player_card_stack.lost_game(): # if score > 21 force the player to stand
+		stand()
 	
 func on_stand_pressed() -> void:
-	pass
+	stand()
 
-func someone_stands() -> void:
+func stand() -> void:
 	if Global.player_turn == Global.belongs_to.PLAYER:
 		Global.player_turn = Global.belongs_to.DEALER
+		toggle_buttons_on(false)
 	else:
-		pass
+		pass # end game logic
+		
+func calculate_winner() -> void:
+	pass
+
+func toggle_buttons_on(boolean: bool) -> void:
+	# true = turn them on, false = turn them off. so toggle_buttons_on(false) will turn off the button
+	# aka disable the button (disabled = true) and make them invisible (visible = false)
+	hit_button.disabled = !boolean
+	stand_button.disabled = !boolean
+	hit_button.visible = boolean
+	stand_button.visible = boolean
+	

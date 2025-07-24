@@ -28,7 +28,6 @@ func update_card_positions() -> void:
 		var card = card_stack[i]
 		var new_position = Vector2(calculate_card_position(i), hand_position)
 		card.position_in_hand = new_position
-		print("Card position in hand: ", card.position_in_hand)
 		animate_card_to_position(card, new_position)
 
 func calculate_card_position(index: int) -> float:
@@ -46,7 +45,7 @@ func calculate_score() -> int:
 	var aces = 0
 	var score = 0
 	for card in card_stack:
-		if card.rank in ["Jack", "Queen", "King"]:
+		if card.rank in ["J", "Q", "K"]:
 			score += 10
 		elif card.rank == "A":
 			aces += 1
