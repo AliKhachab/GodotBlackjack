@@ -21,7 +21,7 @@ func _process(delta: float) -> void:
 func _on_area_2d_mouse_entered() -> void:
 	print("Mouse entered card:", name)
 	emit_signal("hovered", self)
-
+ 
 func _on_area_2d_mouse_exited() -> void:
 	print("Mouse exited card:", name)
 	emit_signal("hovered_off", self)

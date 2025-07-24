@@ -57,3 +57,7 @@ func calculate_score() -> int:
 		score -= 10
 		aces -= 1
 	return score
+
+func lost_game() -> bool:
+	return self._score > 21
+	
