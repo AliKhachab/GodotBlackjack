@@ -19,7 +19,6 @@ func _ready() -> void:
 	hit_button.pressed.connect(on_hit_pressed)
 	stand_button.pressed.connect(on_stand_pressed)
 	
-	
 	Global.prepare_default_deck()
 
 	player_card_stack = Global.card_stack_ref.instantiate()
@@ -54,7 +53,7 @@ func draw_starting_hands() -> void:
 	# Dealer gets 2 cards (1 hidden)
 	Global.player_turn = Global.belongs_to.DEALER
 	deck.draw_card()
-	deck.draw_card() # Note to self, make a flag to make this hidden later
+	deck.draw_card(true) # Note to self, make a flag to make this hidden later
 
 	# Back to player turn for actual gameplay
 	Global.player_turn = Global.belongs_to.PLAYER
@@ -97,10 +96,11 @@ func stand() -> void:
 	if Global.player_turn == Global.belongs_to.PLAYER:
 		Global.player_turn = Global.belongs_to.DEALER
 		toggle_buttons_on(false)
+		flip_dealer_facedown_card(dealer_card_stack)
 	else:
 		pass # end game logic
 		
-func calculate_winner() -> void:
+func game_results() -> void:
 	pass
 
 func toggle_buttons_on(boolean: bool) -> void:
@@ -110,4 +110,12 @@ func toggle_buttons_on(boolean: bool) -> void:
 	stand_button.disabled = !boolean
 	hit_button.visible = boolean
 	stand_button.visible = boolean
-	
+
+func update_text_with_score(label: RichTextLabel, hand: CardStack) -> void:
+	label.text = "Score: "  + str(hand.get_score())
+
+func flip_dealer_facedown_card(dealer_hand: CardStack) -> void:
+	for card in dealer_hand.card_stack:
+		if card.facedown:
+			card.flip()
+			break

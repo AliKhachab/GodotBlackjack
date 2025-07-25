@@ -60,3 +60,6 @@ func calculate_score() -> int:
 func lost_game() -> bool:
 	return self._score > 21
 	
+func get_score() -> int:
+	return self._score
+	

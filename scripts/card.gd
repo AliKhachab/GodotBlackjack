@@ -8,6 +8,7 @@ var card_code: String
 var position_in_hand
 var belongs_to = null # temp name for dealer vs. player. edit this if need be
 var rank
+var facedown: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -26,3 +27,7 @@ func _on_area_2d_mouse_exited() -> void:
 
 func set_card_texture(texture: Texture2D) -> void:
 	$CardTexture.texture = texture
+
+func flip() -> void:
+	self.facedown = false
+	self.get_node("AnimationPlayer").play("card_flip")
