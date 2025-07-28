@@ -3,7 +3,7 @@ extends Node
 const CARD_ORIGINAL_SCALE = 3
 const CARD_MOVE_HIGHLIGHT_SCALE = 3.1
 const STARTING_HAND_COUNT = 2 #because blackjack starts with 2 cards for the dealer and the player
-const CARD_DRAW_SPEED = 0.2
+const CARD_DRAW_SPEED = 0.4
 const PLAYER_HAND_LOCATION = 890
 const DEALER_HAND_LOCATION = 190
 const CARD_WIDTH = 42 * CARD_ORIGINAL_SCALE

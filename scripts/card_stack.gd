@@ -34,14 +34,26 @@ func calculate_card_position(index: int) -> float:
 	var total_width = (card_stack.size() - 1) * Global.CARD_WIDTH
 	return center_screen_x + index * Global.CARD_WIDTH - total_width / 2
 
-func animate_card_to_position(card: Card, new_position: Vector2) -> void:
+func animate_card_to_position(card: Card, new_position: Vector2) -> Tween:
 	var tween = get_tree().create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(card, "position", new_position, Global.CARD_DRAW_SPEED)
+	return tween
 
 func update_score() -> void:
 	_score = calculate_score()
 
-func calculate_score() -> int:
+func calculate_score(hidden_card := false) -> int:
+	if hidden_card:
+		for card in self.card_stack:
+			if !card.facedown:
+				if card.rank in ["J", "Q", "K"]:
+					return 10
+				elif card.rank == "A":
+					return 11
+				else:
+					return int(Global.card_db_ref.RANKS[card.rank])
 	var aces = 0
 	var score = 0
 	for card in card_stack:

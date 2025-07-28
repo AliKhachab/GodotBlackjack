@@ -10,7 +10,8 @@ func _ready() -> void:
 	Global.card_db_ref.initialize_card_textures()
 	Global.card_db_ref.generate_standard_deck(self.deck)
 
-func draw_card(facedown = false):
+func draw_card(facedown = false): # TODO create functionality to limit amount of cards drawn at once. 
+	# cards drawn should wait for all other cards to be drawn.
 	if self.deck:
 		var card_code = deck.pop_at(0)
 		var new_card = CARD_SCENE.instantiate()

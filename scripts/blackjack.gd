@@ -13,6 +13,7 @@ var center_screen_x: float
 @onready var hit_button: Button = $PlayerUI/HBoxContainer/Hit
 @onready var stand_button: Button = $PlayerUI/HBoxContainer/Stand
 
+
 func _ready() -> void:
 	center_screen_x = get_viewport().size.x / 2
 	
@@ -30,9 +31,6 @@ func _ready() -> void:
 	dealer_card_stack.set_player_and_position(Global.belongs_to.DEALER)
 
 	setup_game()
-	player_card_stack.update_score()
-	dealer_card_stack.update_score()
-	#game_loop()
 
 func setup_game() -> void:
 	# Reset state or deal new hands
@@ -57,6 +55,10 @@ func draw_starting_hands() -> void:
 
 	# Back to player turn for actual gameplay
 	Global.player_turn = Global.belongs_to.PLAYER
+	player_card_stack.update_score()
+	dealer_card_stack.update_score()
+	update_text_with_score(player_score, player_card_stack)
+	dealer_score.text = "Score: "  + str(dealer_card_stack.calculate_score(true)) 
 
 func return_cards_to_deck(stack: CardStack) -> void:
 	stack.card_stack.clear()
@@ -67,27 +69,16 @@ func add_card_to_hand(card: Card) -> void:
 	hand.add_card(card)
 	# Fix this logic, cards are not going in player hands
 
-func game_loop() -> void:
-	Global.game_is_running = true
-	while Global.game_is_running:
-		pass
-		#while Global.player_turn == Global.belongs_to.PLAYER:
-			#if "hit":
-				#deck.draw_card()
-				#player_card_stack.update_score()
-				#if player_card_stack.lost_game():
-					#Global.player_turn = Global.belongs_to.DEALER
-			#else:
-				#Global.player_turn = Global.belongs_to.DEALER
-		#while Global.player_turn == Global.belongs_to.DEALER:
-			#pass
-
-
 func on_hit_pressed() -> void:
 	deck.draw_card()
 	player_card_stack.update_score()
 	if player_card_stack.lost_game(): # if score > 21 force the player to stand
-		stand()
+		stand() # find better way to say "end the game right here" without writing stand() twice
+	if Global.player_turn == Global.belongs_to.PLAYER:
+		update_text_with_score(player_score, player_card_stack)
+	else:
+		update_text_with_score(dealer_score, dealer_card_stack)
+
 	
 func on_stand_pressed() -> void:
 	stand()
@@ -97,11 +88,15 @@ func stand() -> void:
 		Global.player_turn = Global.belongs_to.DEALER
 		toggle_buttons_on(false)
 		flip_dealer_facedown_card(dealer_card_stack)
+		dealer_play_turn()
 	else:
-		pass # end game logic
+		dealer_score.push_font_size(16)
+		dealer_score.text = "Dealer stands with score: " + str(dealer_card_stack.calculate_score())
 		
-func game_results() -> void:
-	pass
+func game_results() -> int:
+	if player_card_stack.get_score() > 21:
+		return Global.belongs_to.DEALER
+	return Global.belongs_to.PLAYER if player_card_stack.get_score() > dealer_card_stack.get_score() else Global.belongs_to.DEALER
 
 func toggle_buttons_on(boolean: bool) -> void:
 	# true = turn them on, false = turn them off. so toggle_buttons_on(false) will turn off the button
@@ -119,3 +114,13 @@ func flip_dealer_facedown_card(dealer_hand: CardStack) -> void:
 		if card.facedown:
 			card.flip()
 			break
+
+func dealer_play_turn() -> void:
+	dealer_card_stack.update_score()
+	while dealer_should_draw():
+		deck.draw_card()
+		dealer_card_stack.update_score()
+	stand()
+	
+func dealer_should_draw() -> bool:
+	return dealer_card_stack.get_score() < 19
