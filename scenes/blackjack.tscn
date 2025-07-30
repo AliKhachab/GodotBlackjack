@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c854p67ohbrw0"]
+[gd_scene load_steps=8 format=3 uid="uid://c854p67ohbrw0"]
 
 [ext_resource type="Texture2D" uid="uid://barc87jw2ueii" path="res://assets/sprites/poker table design.jpg" id="1_4fu0r"]
 [ext_resource type="Script" uid="uid://db28w7f3ggu01" path="res://scripts/blackjack.gd" id="1_f2nv2"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bkbgsjrei0paf" path="res://scripts/input_manager.gd" id="4_4fu0r"]
 [ext_resource type="PackedScene" uid="uid://b73t3710s8wuv" path="res://scenes/player_ui.tscn" id="5_f2nv2"]
 [ext_resource type="FontFile" uid="uid://b6kh2h5es47us" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="6_7luxg"]
+[ext_resource type="PackedScene" uid="uid://doxsurifxi1n3" path="res://scenes/pause_menu.tscn" id="7_k6lrv"]
 
 [node name="Blackjack" type="Node2D"]
 script = ExtResource("1_f2nv2")
@@ -56,3 +57,7 @@ offset_left = 960.0
 offset_top = 540.0
 offset_right = 960.0
 offset_bottom = 540.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("7_k6lrv")]

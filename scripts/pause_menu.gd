@@ -5,22 +5,24 @@ extends Control
 func _ready() -> void:
 	pass # Replace with function body.
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func _process(_delta) -> void:
+	testEsc()
 
 func resume() -> void:
 	get_tree().paused = false
+	animate_pause(false)
 	
 func pause() -> void:
 	get_tree().paused = true
+	animate_pause(true)
 
 func testEsc() -> void:
 	if Input.is_action_just_pressed("esc") and get_tree().paused == false:
 		pause()
-	else:
+		print("pause")
+	elif Input.is_action_just_pressed("esc") and get_tree().paused == true:
 		resume()
+		print("unpause")
 
 
 func _on_resume_pressed() -> void:
@@ -31,4 +33,10 @@ func _on_settings_pressed() -> void:
 
 
 func _on_quit_game_pressed() -> void:
-	 get_tree().quit()
+	get_tree().quit()
+
+func animate_pause(pause: bool) -> void:
+	if pause:
+		self.visible = true 
+	else:
+		self.visible = false
