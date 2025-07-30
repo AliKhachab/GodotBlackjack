@@ -85,6 +85,8 @@ func on_stand_pressed() -> void:
 
 func stand() -> void:
 	if Global.player_turn == Global.belongs_to.PLAYER:
+		player_card_stack.update_score()
+		update_text_with_score(player_score, player_card_stack)
 		Global.player_turn = Global.belongs_to.DEALER
 		toggle_buttons_on(false)
 		flip_dealer_facedown_card(dealer_card_stack)
