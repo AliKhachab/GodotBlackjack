@@ -3,6 +3,8 @@ extends Node2D
 
 signal hovered
 signal hovered_off
+signal flipped_up
+
 
 var card_code: String
 var position_in_hand
@@ -13,7 +15,9 @@ var facedown: bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	get_parent().connect_card_signals(self)
-
+	var a := $AnimationPlayer
+	if a:
+		a.connect("animation_finished", Callable(self, "_on_animation_finished"))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -31,3 +35,7 @@ func set_card_texture(texture: Texture2D) -> void:
 func flip() -> void:
 	self.facedown = false
 	self.get_node("AnimationPlayer").play("card_flip")
+	
+func _on_animation_finished(a: StringName) -> void:
+	if a == "card_flip":
+		emit_signal("flipped_up", self)

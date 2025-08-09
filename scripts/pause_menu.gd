@@ -6,7 +6,9 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 func _process(_delta) -> void:
-	testEsc()
+	testEsc() # Note to self -- in this case we need _process() unlike other classes i.e. blackjack.gd
+	# because in those, the classes have built in listeners or things that run on top of listeners.
+	# but here, the game needs to know if we pressed esc on any frame
 
 func resume() -> void:
 	get_tree().paused = false

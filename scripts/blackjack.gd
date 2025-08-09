@@ -13,6 +13,9 @@ var center_screen_x: float
 @onready var hit_button: Button = $PlayerUI/HBoxContainer/Hit
 @onready var stand_button: Button = $PlayerUI/HBoxContainer/Stand
 
+var dealer_turn_active:= false
+var dealer_wait_time := 1.0
+var dealer_timer := 0.0
 
 func _ready() -> void:
 	center_screen_x = get_viewport().size.x / 2
@@ -67,7 +70,6 @@ func return_cards_to_deck(stack: CardStack) -> void:
 func add_card_to_hand(card: Card) -> void:
 	var hand = player_card_stack if (Global.player_turn == Global.belongs_to.PLAYER) else dealer_card_stack
 	hand.add_card(card)
-	# Fix this logic, cards are not going in player hands
 
 func on_hit_pressed() -> void:
 	deck.draw_card()
@@ -89,8 +91,7 @@ func stand() -> void:
 		update_text_with_score(player_score, player_card_stack)
 		Global.player_turn = Global.belongs_to.DEALER
 		toggle_buttons_on(false)
-		flip_dealer_facedown_card(dealer_card_stack)
-		dealer_play_turn()
+		start_dealer_turn()
 	else:
 		dealer_score.push_font_size(16)
 		dealer_score.text = "Dealer stands with score: " + str(dealer_card_stack.calculate_score())
@@ -114,15 +115,50 @@ func update_text_with_score(label: RichTextLabel, hand: CardStack) -> void:
 func flip_dealer_facedown_card(dealer_hand: CardStack) -> void:
 	for card in dealer_hand.card_stack:
 		if card.facedown:
+			card.connect("flipped_up", Callable(self, "_on_dealer_facedown_flipped"))
 			card.flip()
 			break
 
-func dealer_play_turn() -> void:
+# called after the first dealer's drawn
+# facedown card finishes flipping so the dealer can play their turn
+func _on_dealer_facedown_flipped(card) -> void:
 	dealer_card_stack.update_score()
-	while dealer_should_draw():
-		deck.draw_card()
+	update_text_with_score(dealer_score, dealer_card_stack)
+	start_dealer_turn()
+
+func start_dealer_turn() -> void:
+	flip_dealer_facedown_card(dealer_card_stack)
+	dealer_turn_active = true
+	dealer_card_stack.update_score()
+	_dealer_next_action() 
+
+func _dealer_next_action() -> void:
+	if dealer_should_draw():
 		dealer_card_stack.update_score()
-	stand()
+		update_text_with_score(dealer_score, dealer_card_stack)
+		var new_card = deck.draw_card()
+		new_card.connect("flipped_up", Callable(self, "_on_dealer_card_finished"))
+	else:
+		dealer_turn_active = false
+		dealer_card_stack.update_score()
+		update_text_with_score(dealer_score, dealer_card_stack)
+		stand()
+
+func _on_dealer_card_finished() -> void:
+	_dealer_next_action()
+
 	
-func dealer_should_draw() -> bool:
+func dealer_should_draw() -> bool: # TODO program an AI here
+	var dealer_score := dealer_card_stack.get_score()
+	if dealer_score > player_card_stack.get_score():
+		return false
 	return dealer_card_stack.get_score() < 19
+
+
+#func dealer_play_turn() -> void:
+	#dealer_card_stack.update_score()
+	#while dealer_should_draw():
+		#deck.draw_card()
+		#dealer_card_stack.update_score()
+	#stand()
+	#
