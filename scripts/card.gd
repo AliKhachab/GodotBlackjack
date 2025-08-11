@@ -19,9 +19,6 @@ func _ready() -> void:
 	if a:
 		a.connect("animation_finished", Callable(self, "_on_animation_finished"))
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 
 func _on_area_2d_mouse_entered() -> void:
 	emit_signal("hovered", self)
@@ -38,4 +35,4 @@ func flip() -> void:
 	
 func _on_animation_finished(a: StringName) -> void:
 	if a == "card_flip":
-		emit_signal("flipped_up", self)
+		emit_signal("flipped_up")

@@ -10,9 +10,9 @@ func _ready() -> void:
 	Global.card_db_ref.initialize_card_textures()
 	Global.card_db_ref.generate_standard_deck(self.deck)
 
-func draw_card(facedown := false) -> Node2D: # TODO create functionality to limit amount of cards drawn at once. 
+func draw_card(facedown := false) -> Node2D: 
 	# cards drawn should wait for all other cards to be drawn.
-	if !self.deck:
+	if self.deck.is_empty():
 		return null
 		
 	var card_code = deck.pop_at(0)
@@ -22,12 +22,13 @@ func draw_card(facedown := false) -> Node2D: # TODO create functionality to limi
 	new_card.rank = Global.card_db_ref.get_rank_from_code(new_card)
 	new_card.set_card_texture(Global.card_db_ref.card_textures[card_code])
 	$"..".add_card_to_hand(new_card)
-	if !facedown:
+	if !facedown: # play the flip but do not worry about connecting the card to the signal here because we do not need to wait for dealer
+		# at this point. we only need to worry about dealer when it is dealer's turn, so check for dealer stall logic in blackjack.gd
 		new_card.get_node("AnimationPlayer").play("card_flip")
 		new_card.facedown = false
 	else:
 		new_card.facedown = true
-	if deck == []:
+	if self.deck.is_empty():
 		$Area2D/CollisionShape2D.disabled = true
 		$Sprite2D.get_parent().visible = false
 		

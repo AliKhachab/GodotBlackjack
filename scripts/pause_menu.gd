@@ -37,8 +37,8 @@ func _on_settings_pressed() -> void:
 func _on_quit_game_pressed() -> void:
 	get_tree().quit()
 
-func animate_pause(pause: bool) -> void:
-	if pause:
+func animate_pause(pausing: bool) -> void:
+	if pausing:
 		self.visible = true 
 	else:
 		self.visible = false

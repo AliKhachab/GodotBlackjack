@@ -115,13 +115,16 @@ func update_text_with_score(label: RichTextLabel, hand: CardStack) -> void:
 func flip_dealer_facedown_card(dealer_hand: CardStack) -> void:
 	for card in dealer_hand.card_stack:
 		if card.facedown:
+			# immediately count this card into score before showing it. same logic in _dealer_next_action 
+			dealer_card_stack.update_score()
+			update_text_with_score(dealer_score, dealer_card_stack)
 			card.connect("flipped_up", Callable(self, "_on_dealer_facedown_flipped"))
 			card.flip()
 			break
 
 # called after the first dealer's drawn
 # facedown card finishes flipping so the dealer can play their turn
-func _on_dealer_facedown_flipped(card) -> void:
+func _on_dealer_facedown_flipped() -> void:
 	dealer_card_stack.update_score()
 	update_text_with_score(dealer_score, dealer_card_stack)
 	start_dealer_turn()
@@ -134,10 +137,13 @@ func start_dealer_turn() -> void:
 
 func _dealer_next_action() -> void:
 	if dealer_should_draw():
-		dealer_card_stack.update_score()
-		update_text_with_score(dealer_score, dealer_card_stack)
 		var new_card = deck.draw_card()
 		new_card.connect("flipped_up", Callable(self, "_on_dealer_card_finished"))
+		# update score right away 
+		dealer_card_stack.update_score()
+		update_text_with_score(dealer_score, dealer_card_stack)
+		new_card.flip()
+		
 	else:
 		dealer_turn_active = false
 		dealer_card_stack.update_score()
@@ -149,16 +155,7 @@ func _on_dealer_card_finished() -> void:
 
 	
 func dealer_should_draw() -> bool: # TODO program an AI here
-	var dealer_score := dealer_card_stack.get_score()
-	if dealer_score > player_card_stack.get_score():
+	var ds := dealer_card_stack.get_score()
+	if ds > player_card_stack.get_score():
 		return false
 	return dealer_card_stack.get_score() < 19
-
-
-#func dealer_play_turn() -> void:
-	#dealer_card_stack.update_score()
-	#while dealer_should_draw():
-		#deck.draw_card()
-		#dealer_card_stack.update_score()
-	#stand()
-	#

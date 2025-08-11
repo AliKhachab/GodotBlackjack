@@ -43,14 +43,14 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/normal_font = ExtResource("6_7luxg")
-theme_override_font_sizes/normal_font_size = 64
+theme_override_font_sizes/normal_font_size = 48
 text = "Score: "
 
 [node name="Player Score" type="RichTextLabel" parent="Scores"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/normal_font = ExtResource("6_7luxg")
-theme_override_font_sizes/normal_font_size = 64
+theme_override_font_sizes/normal_font_size = 48
 text = "Score: "
 
 [node name="PlayerUI" parent="." instance=ExtResource("5_f2nv2")]
