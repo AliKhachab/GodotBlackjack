@@ -28,11 +28,15 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Hit" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_jkj6h")
+theme_override_font_sizes/font_size = 16
 text = "Hit"
 
 [node name="Stand" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_jkj6h")
+theme_override_font_sizes/font_size = 16
 text = "Stand"
