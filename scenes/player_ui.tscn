@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b73t3710s8wuv"]
 
-[ext_resource type="FontFile" uid="uid://b6kh2h5es47us" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="1_jkj6h"]
+[ext_resource type="Theme" uid="uid://q7gyfh33bbhn" path="res://themes/Default Button.tres" id="1_jkj6h"]
 
 [node name="PlayerUI" type="Control"]
 layout_mode = 3
@@ -30,13 +30,11 @@ grow_vertical = 2
 [node name="Hit" type="Button" parent="HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("1_jkj6h")
-theme_override_font_sizes/font_size = 16
+theme = ExtResource("1_jkj6h")
 text = "Hit"
 
 [node name="Stand" type="Button" parent="HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("1_jkj6h")
-theme_override_font_sizes/font_size = 16
+theme = ExtResource("1_jkj6h")
 text = "Stand"

@@ -1,15 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cd7oqfk3jarv0"]
+[gd_scene load_steps=4 format=3 uid="uid://cd7oqfk3jarv0"]
 
 [ext_resource type="Script" uid="uid://dclougvik3xuw" path="res://scripts/main_menu.gd" id="1_l6cm7"]
+[ext_resource type="Theme" uid="uid://q7gyfh33bbhn" path="res://themes/Default Button.tres" id="2_bqqt6"]
 [ext_resource type="FontFile" uid="uid://b6kh2h5es47us" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_ekxnf"]
-
-[sub_resource type="Theme" id="Theme_bqqt6"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ekxnf"]
-bg_color = Color(1, 1, 1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bqqt6"]
-bg_color = Color(1, 1, 1, 1)
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -47,20 +40,15 @@ theme_override_constants/separation = 16
 [node name="Start game" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme = SubResource("Theme_bqqt6")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("2_ekxnf")
+theme = ExtResource("2_bqqt6")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StyleBoxFlat_ekxnf")
 text = "Start game"
 
 [node name="Quit" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("2_ekxnf")
+theme = ExtResource("2_bqqt6")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StyleBoxFlat_bqqt6")
 text = "Quit"
 
 [node name="Label2" type="Label" parent="."]
