@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://doxsurifxi1n3"]
+[gd_scene load_steps=5 format=3 uid="uid://doxsurifxi1n3"]
 
 [ext_resource type="Script" uid="uid://nx47268irmce" path="res://scripts/pause_menu.gd" id="1_n87rw"]
 [ext_resource type="FontFile" uid="uid://b6kh2h5es47us" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_myx47"]
 [ext_resource type="Theme" uid="uid://q7gyfh33bbhn" path="res://themes/Default Button.tres" id="3_kukqi"]
+[ext_resource type="Theme" uid="uid://bui63fvhgfk27" path="res://themes/Quit Button.tres" id="4_5d2l8"]
 
 [node name="PauseMenu" type="Control"]
 process_mode = 3
@@ -76,6 +77,7 @@ text = "Settings"
 [node name="Quit Game" type="Button" parent="PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(100, 50)
 layout_mode = 2
+theme = ExtResource("4_5d2l8")
 theme_override_fonts/font = ExtResource("2_myx47")
 text = "Quit Game"
 

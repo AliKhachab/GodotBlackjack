@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cerr7epkn3hp2"
-path="res://.godot/imported/button_rectangle_flat.png-49e78a882c24327da03756d6f7174f5b.ctex"
+uid="uid://cqt28ccv56fuq"
+path="res://.godot/imported/button_rectangle_depth_gradient_red.png-d10db42016cdb6eb2f8f58586632e37b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/button_rectangle_flat.png"
-dest_files=["res://.godot/imported/button_rectangle_flat.png-49e78a882c24327da03756d6f7174f5b.ctex"]
+source_file="res://assets/sprites/button_rectangle_depth_gradient_red.png"
+dest_files=["res://.godot/imported/button_rectangle_depth_gradient_red.png-d10db42016cdb6eb2f8f58586632e37b.ctex"]
 
 [params]
 

@@ -1,3 +1,23 @@
-[gd_resource type="Theme" format=3 uid="uid://bui63fvhgfk27"]
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://bui63fvhgfk27"]
+
+[ext_resource type="FontFile" uid="uid://b6kh2h5es47us" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="1_187d1"]
+[ext_resource type="Texture2D" uid="uid://cqt28ccv56fuq" path="res://assets/sprites/button_rectangle_depth_gradient_red.png" id="1_vg08i"]
+[ext_resource type="Texture2D" uid="uid://dh17fsypr715c" path="res://assets/sprites/button_rectangle_flat_red.png" id="2_187d1"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l513p"]
+texture = ExtResource("1_vg08i")
+modulate_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xwwnh"]
+texture = ExtResource("1_vg08i")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y1x14"]
+texture = ExtResource("2_187d1")
 
 [resource]
+default_font_size = 32
+Button/colors/font_color = Color(0.356863, 0.482353, 0.478431, 1)
+Button/fonts/font = ExtResource("1_187d1")
+Button/styles/hover = SubResource("StyleBoxTexture_l513p")
+Button/styles/normal = SubResource("StyleBoxTexture_xwwnh")
+Button/styles/pressed = SubResource("StyleBoxTexture_y1x14")

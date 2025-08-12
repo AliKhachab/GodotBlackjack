@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bv71tejodpwtd"]
+[gd_scene load_steps=4 format=3 uid="uid://bv71tejodpwtd"]
 
+[ext_resource type="Theme" uid="uid://q7gyfh33bbhn" path="res://themes/Default Button.tres" id="1_d57yd"]
 [ext_resource type="FontFile" uid="uid://b6kh2h5es47us" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="1_fqf1x"]
+[ext_resource type="Theme" uid="uid://bui63fvhgfk27" path="res://themes/Quit Button.tres" id="2_j5vbe"]
 
 [node name="ResultsScreen" type="Control"]
 layout_mode = 3
@@ -37,13 +39,14 @@ layout_mode = 2
 [node name="Play Again" type="Button" parent="PanelContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 75)
 layout_mode = 2
+theme = ExtResource("1_d57yd")
 theme_override_fonts/font = ExtResource("1_fqf1x")
 text = "Play again"
 
 [node name="Quit" type="Button" parent="PanelContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 75)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("1_fqf1x")
+theme = ExtResource("2_j5vbe")
 text = "Quit"
 
 [node name="WinLabel" type="Label" parent="."]
