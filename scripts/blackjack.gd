@@ -12,6 +12,7 @@ var center_screen_x: float
 @onready var dealer_score: RichTextLabel = $"Scores/Dealer Score"
 @onready var hit_button: Button = $PlayerUI/HBoxContainer/Hit
 @onready var stand_button: Button = $PlayerUI/HBoxContainer/Stand
+@onready var results_screen := $CanvasLayer/ResultsScreen
 
 var dealer_turn_active:= false
 var dealer_wait_time := 1.0
@@ -22,6 +23,7 @@ func _ready() -> void:
 	
 	hit_button.pressed.connect(on_hit_pressed)
 	stand_button.pressed.connect(on_stand_pressed)
+	results_screen.play_again.connect(_on_play_again);
 	
 	Global.prepare_default_deck()
 
@@ -35,7 +37,12 @@ func _ready() -> void:
 
 	setup_game()
 
+func _on_play_again() -> void:
+	setup_game()
+
 func setup_game() -> void:
+	results_screen.visible = false
+	
 	# Reset state or deal new hands
 	return_cards_to_deck(player_card_stack)
 	return_cards_to_deck(dealer_card_stack)
@@ -94,7 +101,9 @@ func stand() -> void:
 		start_dealer_turn()
 	else:
 		dealer_score.push_font_size(16)
-		dealer_score.text = "Dealer stands with score: " + str(dealer_card_stack.calculate_score())
+		dealer_score.text = "Dealer score: " + str(dealer_card_stack.calculate_score())
+		player_score.text = "Your score: " + str(player_card_stack.calculate_score())
+		results_screen.visible = true
 		
 func game_results() -> int:
 	if player_card_stack.get_score() > 21:
