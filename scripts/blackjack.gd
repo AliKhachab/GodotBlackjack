@@ -71,6 +71,11 @@ func draw_starting_hands() -> void:
 	dealer_score.text = "Score: "  + str(dealer_card_stack.calculate_score(true)) 
 
 func return_cards_to_deck(stack: CardStack) -> void:
+	# delete nodes from scenes entirely
+	for card in stack.card_stack:
+		card.queue_free()
+	
+	# clear RAM holding card info
 	stack.card_stack.clear()
 	stack.update_card_positions()
 
