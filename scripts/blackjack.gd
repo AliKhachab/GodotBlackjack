@@ -108,12 +108,22 @@ func stand() -> void:
 		dealer_score.push_font_size(16)
 		dealer_score.text = "Dealer score: " + str(dealer_card_stack.calculate_score())
 		player_score.text = "Your score: " + str(player_card_stack.calculate_score())
+		results_screen.update_label(game_results())
 		results_screen.visible = true
 		
 func game_results() -> int:
-	if player_card_stack.get_score() > 21:
+	var ps = player_card_stack.get_score()
+	var ds = dealer_card_stack.get_score()
+	if ps > 21:
 		return Global.belongs_to.DEALER
-	return Global.belongs_to.PLAYER if player_card_stack.get_score() > dealer_card_stack.get_score() else Global.belongs_to.DEALER
+	elif ds > 21:
+		return Global.belongs_to.PLAYER
+	elif ds == ps:
+		return 2
+	else:
+		if ps > ds:
+			return Global.belongs_to.PLAYER 
+		return Global.belongs_to.DEALER
 
 func toggle_buttons_on(boolean: bool) -> void:
 	# true = turn them on, false = turn them off. so toggle_buttons_on(false) will turn off the button
@@ -147,6 +157,8 @@ func start_dealer_turn() -> void:
 	flip_dealer_facedown_card(dealer_card_stack)
 	dealer_turn_active = true
 	dealer_card_stack.update_score()
+	if player_card_stack.get_score() > 21:
+		stand()
 	_dealer_next_action() 
 
 func _dealer_next_action() -> void:

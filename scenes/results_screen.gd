@@ -12,3 +12,12 @@ func _on_play_again_pressed() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
+
+func update_label(win: int) -> void:
+	if win == Global.belongs_to.PLAYER:
+		$WinLabel.text = "You win!"
+		return
+	if win == 2:
+		$WinLabel.text = "It's a tie!"
+		return
+	$WinLabel.text = "You lose..."
