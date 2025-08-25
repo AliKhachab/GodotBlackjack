@@ -18,14 +18,11 @@ func pause() -> void:
 	get_tree().paused = true
 	animate_pause(true)
 
-func testEsc() -> void:
+func testEsc() -> void: # modify this so the highlighted button in the bg wont change on esc press to pause menu
 	if Input.is_action_just_pressed("esc") and get_tree().paused == false:
 		pause()
-		print("pause")
 	elif Input.is_action_just_pressed("esc") and get_tree().paused == true:
 		resume()
-		print("unpause")
-
 
 func _on_resume_pressed() -> void:
 	resume()
