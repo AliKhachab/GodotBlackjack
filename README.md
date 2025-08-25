@@ -1,2 +1,13 @@
 # GodotBlackjack
-Blackjack simulator in Godot. Currently a WIP, about 75% complete. This project is meant to be a foundation for a future project that I am making that uses cards and dice, where I can take a lot of the card logic here and put it into my dream game. I am also using this project to learn how to do things like manage state, game loop, global logic, etc.
+A Blackjack simulator in Godot. 
+
+The plan is to use this to make my first ever real game and learn how to use cards in Godot as a foundation for a "dream-game" I have planned in the future. As this is my first ever Godot project and my first ever game development project, I have been using this to learn:
+	- how to use composition more than inheritance to make more dynamic objects
+	- creating UIs
+	- managing scenes
+	- managing state universally
+	- using button assets (KennyNL's CC0 assets)
+	- etc.
+	
+Things I want to learn with this:
+	- 
