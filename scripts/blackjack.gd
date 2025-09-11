@@ -48,6 +48,7 @@ func setup_game() -> void:
 	return_cards_to_deck(dealer_card_stack)
 	deck.deck = Global.default_deck
 	deck.deck.shuffle()
+	print(len(deck.deck))
 
 	draw_starting_hands()
 	toggle_buttons_on(true)
@@ -73,8 +74,10 @@ func draw_starting_hands() -> void:
 func return_cards_to_deck(stack: CardStack) -> void:
 	# delete nodes from scenes entirely
 	for card in stack.card_stack:
+		deck.deck.append(card.card_code) 
+		# we need to add the card code back to the list of cards in deck since deck holds strings
+		# and the player hands hold card objs
 		card.queue_free()
-	
 	# clear RAM holding card info
 	stack.card_stack.clear()
 	stack.update_card_positions()

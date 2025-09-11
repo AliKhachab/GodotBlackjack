@@ -61,7 +61,6 @@ func get_card_with_highest_z_index(cards):
 
 func highlight_card(card, hovered):
 	if hovered:
-		print("Hovering")
 		card.scale = Vector2(Global.CARD_MOVE_HIGHLIGHT_SCALE, Global.CARD_MOVE_HIGHLIGHT_SCALE)
 		card.z_index = 2
 	else:
