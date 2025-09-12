@@ -1,9 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://c854p67ohbrw0"]
+[gd_scene load_steps=8 format=3 uid="uid://c854p67ohbrw0"]
 
 [ext_resource type="Texture2D" uid="uid://barc87jw2ueii" path="res://assets/sprites/poker table design.jpg" id="1_4fu0r"]
 [ext_resource type="Script" uid="uid://db28w7f3ggu01" path="res://scripts/blackjack.gd" id="1_f2nv2"]
 [ext_resource type="PackedScene" uid="uid://1mxss2kjiiqe" path="res://scenes/deck.tscn" id="2_kvb06"]
-[ext_resource type="Script" uid="uid://bkbgsjrei0paf" path="res://scripts/input_manager.gd" id="4_4fu0r"]
 [ext_resource type="PackedScene" uid="uid://b73t3710s8wuv" path="res://scenes/player_ui.tscn" id="5_f2nv2"]
 [ext_resource type="FontFile" uid="uid://b6kh2h5es47us" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="6_7luxg"]
 [ext_resource type="PackedScene" uid="uid://doxsurifxi1n3" path="res://scenes/pause_menu.tscn" id="7_k6lrv"]
@@ -20,9 +19,6 @@ texture = ExtResource("1_4fu0r")
 
 [node name="Deck" parent="." instance=ExtResource("2_kvb06")]
 position = Vector2(1600, 540)
-
-[node name="InputManager" type="Node2D" parent="."]
-script = ExtResource("4_4fu0r")
 
 [node name="Scores" type="VBoxContainer" parent="."]
 anchors_preset = -1

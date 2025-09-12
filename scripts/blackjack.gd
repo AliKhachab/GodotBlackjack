@@ -1,6 +1,8 @@
 class_name Blackjack
 extends Node2D
 
+signal dealer_finished_turn
+
 var player_card_stack: CardStack 
 var dealer_card_stack: CardStack
 var center_screen_x: float
@@ -35,6 +37,8 @@ func _ready() -> void:
 	add_child(dealer_card_stack)
 	dealer_card_stack.set_player_and_position(Global.belongs_to.DEALER)
 
+	connect("dealer_finished_turn", Callable(self, "stand"))
+
 	setup_game()
 
 func _on_play_again() -> void:
@@ -48,7 +52,6 @@ func setup_game() -> void:
 	return_cards_to_deck(dealer_card_stack)
 	deck.deck = Global.default_deck
 	deck.deck.shuffle()
-	print(len(deck.deck))
 
 	draw_starting_hands()
 	toggle_buttons_on(true)
@@ -177,7 +180,7 @@ func _dealer_next_action() -> void:
 		dealer_turn_active = false
 		dealer_card_stack.update_score()
 		update_text_with_score(dealer_score, dealer_card_stack)
-		stand()
+		emit_signal("dealer_finished_turn")
 
 func _on_dealer_card_finished() -> void:
 	_dealer_next_action()
