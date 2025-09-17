@@ -6,7 +6,7 @@ signal dealer_finished_turn
 var player_card_stack: CardStack 
 var dealer_card_stack: CardStack
 var center_screen_x: float
-
+var count := 0
 @onready var deck: Deck = $Deck
 @onready var player_ui: Control = $PlayerUI
 @onready var scores: VBoxContainer = $Scores
@@ -45,6 +45,7 @@ func _on_play_again() -> void:
 	setup_game()
 
 func setup_game() -> void:
+	count = 0
 	results_screen.visible = false
 	
 	# Reset state or deal new hands
@@ -52,9 +53,18 @@ func setup_game() -> void:
 	return_cards_to_deck(dealer_card_stack)
 	deck.deck = Global.default_deck
 	deck.deck.shuffle()
-
+	generateDebugDeck() # uncomment for testing purposes only
 	draw_starting_hands()
 	toggle_buttons_on(true)
+
+
+func generateDebugDeck() -> void:
+	# for testing purposes only. a deck that always gives the dealer a score under 19 after the dealer flips the facedown and hits once, and the player has a score of 20 on the initial draw
+	deck.deck = [
+		"10H", "10D", # player cards
+		"7C", "5S",  # dealer cards (5S is facedown)
+		"2H", "3D", "4C", "6S", "7H", "8D", "9C", "10S", "JH", "QD", "KC", "AS"
+	]
 
 func draw_starting_hands() -> void:
 	# Player gets 2 cards
@@ -65,7 +75,7 @@ func draw_starting_hands() -> void:
 	# Dealer gets 2 cards (1 hidden)
 	Global.player_turn = Global.belongs_to.DEALER
 	deck.draw_card()
-	deck.draw_card(true) # Note to self, make a flag to make this hidden later
+	deck.draw_card(true) # true = facedown card
 
 	# Back to player turn for actual gameplay
 	Global.player_turn = Global.belongs_to.PLAYER
@@ -169,13 +179,16 @@ func start_dealer_turn() -> void:
 
 func _dealer_next_action() -> void:
 	if dealer_should_draw():
-		var new_card = deck.draw_card()
+		var new_card = deck.draw_card(false, true) # facedown = false, dealer = true
 		new_card.connect("flipped_up", Callable(self, "_on_dealer_card_finished"))
-		# update score right away 
-		dealer_card_stack.update_score()
-		update_text_with_score(dealer_score, dealer_card_stack)
+		# update score right away
+		print("before flip in dealernextaction") 
 		new_card.flip()
 		
+		dealer_card_stack.update_score()
+		update_text_with_score(dealer_score, dealer_card_stack)
+		count += 1
+		print(count)
 	else:
 		dealer_turn_active = false
 		dealer_card_stack.update_score()
@@ -183,11 +196,17 @@ func _dealer_next_action() -> void:
 		emit_signal("dealer_finished_turn")
 
 func _on_dealer_card_finished() -> void:
+	print("after flip in dealernextaction")
+	print("\ncard flipped in dealernextaction\n")
 	_dealer_next_action()
 
 	
 func dealer_should_draw() -> bool: # TODO program an AI here
+	if player_card_stack.get_score() > 21:
+		return false # player already busted, no way for dealer to lose
 	var ds := dealer_card_stack.get_score()
-	if ds > player_card_stack.get_score():
+	if ds >= 21: # if dealer hit blackjack or busted 
 		return false
-	return dealer_card_stack.get_score() < 19
+	if ds > player_card_stack.get_score(): # if the dealer won already
+		return false
+	return dealer_card_stack.get_score() < 19 # otherwise take a chance to win
