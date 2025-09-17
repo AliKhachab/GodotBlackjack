@@ -10,7 +10,7 @@ func _ready() -> void:
 	Global.card_db_ref.initialize_card_textures()
 	Global.card_db_ref.generate_standard_deck(self.deck)
 
-func draw_card(facedown := false) -> Node2D: 
+func draw_card(facedown := false, dealer_turn := false) -> Node2D: 
 	# cards drawn should wait for all other cards to be drawn.
 	if self.deck.is_empty():
 		return null
@@ -24,7 +24,9 @@ func draw_card(facedown := false) -> Node2D:
 	$"..".add_card_to_hand(new_card)
 	if !facedown: # play the flip but do not worry about connecting the card to the signal here because we do not need to wait for dealer
 		# at this point. we only need to worry about dealer when it is dealer's turn, so check for dealer stall logic in blackjack.gd
-		new_card.get_node("AnimationPlayer").play("card_flip")
+		if !dealer_turn:
+			new_card.flip()
+			print("\ncard flipped in draw_card\n")
 		new_card.facedown = false
 	else:
 		new_card.facedown = true
