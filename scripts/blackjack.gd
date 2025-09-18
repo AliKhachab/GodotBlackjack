@@ -160,6 +160,9 @@ func set_buttons_on(boolean: bool) -> void:
 	stand_button.visible = boolean
 
 func _buttons_on() -> void:
+	if Global.player_turn != Global.belongs_to.PLAYER: # usually flip up animation would toggle buttons on, but if it is dealer's turn, do not enable buttons (if player busted, dealer turn starts immediately after so just turn all the buttons off anyways)
+		set_buttons_on(false)
+		return
 	set_buttons_on(true)
 
 
