@@ -17,8 +17,6 @@ var count := 0
 @onready var results_screen := $CanvasLayer/ResultsScreen
 
 var dealer_turn_active:= false
-var dealer_wait_time := 1.0
-var dealer_timer := 0.0
 
 func _ready() -> void:
 	center_screen_x = get_viewport().size.x / 2
@@ -36,6 +34,7 @@ func _ready() -> void:
 	dealer_card_stack = Global.card_stack_ref.instantiate()
 	add_child(dealer_card_stack)
 	dealer_card_stack.set_player_and_position(Global.belongs_to.DEALER)
+
 
 	connect("dealer_finished_turn", Callable(self, "stand"))
 
@@ -55,27 +54,33 @@ func setup_game() -> void:
 	deck.deck.shuffle()
 	generateDebugDeck() # uncomment for testing purposes only
 	draw_starting_hands()
-	toggle_buttons_on(true)
+	set_buttons_on(true)
 
 
 func generateDebugDeck() -> void:
 	# for testing purposes only. a deck that always gives the dealer a score under 19 after the dealer flips the facedown and hits once, and the player has a score of 20 on the initial draw
 	deck.deck = [
-		"10H", "10D", # player cards
-		"7C", "5S",  # dealer cards (5S is facedown)
-		"2H", "3D", "4C", "6S", "7H", "8D", "9C", "10S", "JH", "QD", "KC", "AS"
+		"5D", "5H",  # player cards
+		"2C", "2S",
+		"10H", "10D",
+		"2H", "2D", "3C", "3D", "3H", "3S", "4C", "4D", "4H", "4S", 
 	]
 
 func draw_starting_hands() -> void:
 	# Player gets 2 cards
 	Global.player_turn = Global.belongs_to.PLAYER
 	deck.draw_card()
+	deck.set_not_drawing()
 	deck.draw_card()
-
+	deck.set_not_drawing()
+	
 	# Dealer gets 2 cards (1 hidden)
 	Global.player_turn = Global.belongs_to.DEALER
 	deck.draw_card()
+	deck.set_not_drawing()
 	deck.draw_card(true) # true = facedown card
+	deck.set_not_drawing()
+
 
 	# Back to player turn for actual gameplay
 	Global.player_turn = Global.belongs_to.PLAYER
@@ -100,15 +105,20 @@ func add_card_to_hand(card: Card) -> void:
 	hand.add_card(card)
 
 func on_hit_pressed() -> void:
-	deck.draw_card()
+	var new_card := deck.draw_card()
+	new_card.connect("flipped_up", Callable(self, "_buttons_on"))
+	deck.set_not_drawing()
+	set_buttons_on(false)
+	print("BUTTONS VISIBLE:", hit_button.visible, stand_button.visible)
 	player_card_stack.update_score()
 	if player_card_stack.lost_game(): # if score > 21 force the player to stand
-		stand() # find better way to say "end the game right here" without writing stand() twice
+		stand()
 	if Global.player_turn == Global.belongs_to.PLAYER:
 		update_text_with_score(player_score, player_card_stack)
+		# set_buttons_on(true)
+		print("BUTTONS VISIBLE:", hit_button.visible, stand_button.visible)
 	else:
 		update_text_with_score(dealer_score, dealer_card_stack)
-
 	
 func on_stand_pressed() -> void:
 	stand()
@@ -118,7 +128,7 @@ func stand() -> void:
 		player_card_stack.update_score()
 		update_text_with_score(player_score, player_card_stack)
 		Global.player_turn = Global.belongs_to.DEALER
-		toggle_buttons_on(false)
+		set_buttons_on(false)
 		start_dealer_turn()
 	else:
 		dealer_score.push_font_size(16)
@@ -141,13 +151,17 @@ func game_results() -> int:
 			return Global.belongs_to.PLAYER 
 		return Global.belongs_to.DEALER
 
-func toggle_buttons_on(boolean: bool) -> void:
-	# true = turn them on, false = turn them off. so toggle_buttons_on(false) will turn off the button
+func set_buttons_on(boolean: bool) -> void:
+	# true = turn them on, false = turn them off. so set_buttons_on(false) will turn off the button
 	# aka disable the button (disabled = true) and make them invisible (visible = false)
 	hit_button.disabled = !boolean
 	stand_button.disabled = !boolean
 	hit_button.visible = boolean
 	stand_button.visible = boolean
+
+func _buttons_on() -> void:
+	set_buttons_on(true)
+
 
 func update_text_with_score(label: RichTextLabel, hand: CardStack) -> void:
 	label.text = "Score: "  + str(hand.get_score())
@@ -178,13 +192,16 @@ func start_dealer_turn() -> void:
 	_dealer_next_action() 
 
 func _dealer_next_action() -> void:
+	if deck.is_drawing():
+		return # wait until the card is done drawing
 	if dealer_should_draw():
 		var new_card = deck.draw_card(false, true) # facedown = false, dealer = true
 		new_card.connect("flipped_up", Callable(self, "_on_dealer_card_finished"))
+		print("Reconnected flipped_up for card:", new_card.card_code)
 		# update score right away
 		print("before flip in dealernextaction") 
 		new_card.flip()
-		
+		deck.set_not_drawing()
 		dealer_card_stack.update_score()
 		update_text_with_score(dealer_score, dealer_card_stack)
 		count += 1
@@ -196,11 +213,10 @@ func _dealer_next_action() -> void:
 		emit_signal("dealer_finished_turn")
 
 func _on_dealer_card_finished() -> void:
-	print("after flip in dealernextaction")
-	print("\ncard flipped in dealernextaction\n")
+	print("flipped_up signal received for dealer card")
+	deck.set_not_drawing()
 	_dealer_next_action()
 
-	
 func dealer_should_draw() -> bool: # TODO program an AI here
 	if player_card_stack.get_score() > 21:
 		return false # player already busted, no way for dealer to lose
