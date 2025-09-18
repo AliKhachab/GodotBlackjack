@@ -32,6 +32,8 @@ func set_card_texture(texture: Texture2D) -> void:
 func flip() -> void:
 	self.facedown = false
 	self.get_node("AnimationPlayer").play("card_flip")
+	print("Emitting flipped_up for card:", self.card_code)
+
 	
 func _on_animation_finished(a: StringName) -> void:
 	if a == "card_flip":
