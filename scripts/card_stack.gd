@@ -30,7 +30,7 @@ func update_card_positions() -> void:
 		card.position_in_hand = new_position
 		animate_card_to_position(card, new_position)
 
-func calculate_card_position(index: int) -> float:
+func calculate_card_position(index: int) -> int:
 	var total_width = (card_stack.size() - 1) * Global.CARD_WIDTH
 	return center_screen_x + index * Global.CARD_WIDTH - total_width / 2
 
