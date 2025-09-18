@@ -5,16 +5,17 @@ var deck : Array[String] = []
 const CARD_SCN_PATH := "res://scenes/card.tscn"
 const CARD_SCENE = preload(CARD_SCN_PATH) 
 var card_id = 0
+var _drawing := false
 
 func _ready() -> void:
 	Global.card_db_ref.initialize_card_textures()
 	Global.card_db_ref.generate_standard_deck(self.deck)
 
-func draw_card(facedown := false, dealer_turn := false) -> Node2D: 
+func draw_card(facedown := false, dealer_turn := false) -> Node2D:
 	# cards drawn should wait for all other cards to be drawn.
 	if self.deck.is_empty():
 		return null
-		
+	_drawing = true
 	var card_code = deck.pop_at(0)
 	var new_card = CARD_SCENE.instantiate()
 	new_card.name = str(++card_id) # use the name as the id for a unique identifier
@@ -33,5 +34,11 @@ func draw_card(facedown := false, dealer_turn := false) -> Node2D:
 	if self.deck.is_empty():
 		$Area2D/CollisionShape2D.disabled = true
 		$Sprite2D.get_parent().visible = false
-		
 	return new_card
+
+
+func is_drawing() -> bool:
+	return _drawing
+
+func set_not_drawing() -> void:
+	_drawing = false
