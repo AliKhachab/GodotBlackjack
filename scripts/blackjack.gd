@@ -198,16 +198,9 @@ func _dealer_next_action() -> void:
 	if dealer_should_draw():
 		var new_card = deck.draw_card(false, true) # facedown = false, dealer = true
 		new_card.connect("flipped_up", Callable(self, "_on_dealer_card_finished")) 
-		
-		# deck.set_not_drawing()
 		dealer_card_stack.update_score()
 		update_text_with_score(dealer_score, dealer_card_stack)
-		
-
-		# print("Reconnected flipped_up for card:", new_card.card_code)
-		# update score right away
-		# print("before flip in dealernextaction") 
-		new_card.flip() # this is where the error is in case i forget!!!
+		new_card.flip() 
 	else:
 		dealer_turn_active = false
 		dealer_card_stack.update_score()
