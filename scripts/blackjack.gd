@@ -6,7 +6,6 @@ signal dealer_finished_turn
 var player_card_stack: CardStack 
 var dealer_card_stack: CardStack
 var center_screen_x: float
-var count := 0
 @onready var deck: Deck = $Deck
 @onready var player_ui: Control = $PlayerUI
 @onready var scores: VBoxContainer = $Scores
@@ -44,7 +43,6 @@ func _on_play_again() -> void:
 	setup_game()
 
 func setup_game() -> void:
-	count = 0
 	results_screen.visible = false
 	
 	# Reset state or deal new hands
@@ -199,16 +197,17 @@ func _dealer_next_action() -> void:
 		return # wait until the card is done drawing
 	if dealer_should_draw():
 		var new_card = deck.draw_card(false, true) # facedown = false, dealer = true
-		new_card.connect("flipped_up", Callable(self, "_on_dealer_card_finished"))
-		print("Reconnected flipped_up for card:", new_card.card_code)
-		# update score right away
-		print("before flip in dealernextaction") 
-		new_card.flip()
-		deck.set_not_drawing()
+		new_card.connect("flipped_up", Callable(self, "_on_dealer_card_finished")) 
+		
+		# deck.set_not_drawing()
 		dealer_card_stack.update_score()
 		update_text_with_score(dealer_score, dealer_card_stack)
-		count += 1
-		print(count)
+		
+
+		# print("Reconnected flipped_up for card:", new_card.card_code)
+		# update score right away
+		# print("before flip in dealernextaction") 
+		new_card.flip() # this is where the error is in case i forget!!!
 	else:
 		dealer_turn_active = false
 		dealer_card_stack.update_score()
@@ -218,7 +217,7 @@ func _dealer_next_action() -> void:
 func _on_dealer_card_finished() -> void:
 	print("flipped_up signal received for dealer card")
 	deck.set_not_drawing()
-	_dealer_next_action()
+	_dealer_next_action() # this is where the error is in case i forget!!!
 
 func dealer_should_draw() -> bool: # TODO program an AI here
 	if player_card_stack.get_score() > 21:
