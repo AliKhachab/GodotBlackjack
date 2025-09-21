@@ -50,19 +50,20 @@ func setup_game() -> void:
 	return_cards_to_deck(dealer_card_stack)
 	deck.deck = Global.default_deck
 	deck.deck.shuffle()
-	generateDebugDeck() # uncomment for testing purposes only
+	# generateDebugDeck() # uncomment for testing purposes only
 	draw_starting_hands()
 	set_buttons_on(true)
 
 
-func generateDebugDeck() -> void:
-	# for testing purposes only. a deck that always gives the dealer a score under 19 after the dealer flips the facedown and hits once, and the player has a score of 20 on the initial draw
-	deck.deck = [
-		"5D", "5H",  # player cards
-		"2C", "2S",
-		"10H", "10D",
-		"2H", "2D", "3C", "3D", "3H", "3S", "4C", "4D", "4H", "4S", 
-	]
+# uncomment for testing purposes only
+# func generateDebugDeck() -> void:
+# 	# for testing purposes only. a deck that always gives the dealer a score under 19 after the dealer flips the facedown and hits once, and the player has a score of 20 on the initial draw
+# 	deck.deck = [
+# 		"5D", "5H",  # player cards
+# 		"2C", "2S",
+# 		"10H", "10D",
+# 		"2H", "2D", "3C", "3D", "3H", "3S", "4C", "4D", "4H", "4S", 
+# 	]
 
 func draw_starting_hands() -> void:
 	# Player gets 2 cards
