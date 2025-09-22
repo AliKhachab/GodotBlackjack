@@ -1,7 +1,7 @@
 class_name Blackjack
 extends Node2D
 
-signal dealer_finished_turn
+signal dealer_finished_turn # signal for dealer turn finished that only plays when the game is fully over.
 
 var player_card_stack: CardStack 
 var dealer_card_stack: CardStack
@@ -14,8 +14,12 @@ var center_screen_x: float
 @onready var hit_button: Button = $PlayerUI/HBoxContainer/Hit
 @onready var stand_button: Button = $PlayerUI/HBoxContainer/Stand
 @onready var results_screen := $CanvasLayer/ResultsScreen
+@onready var card_drawn_sfx := $CardDrawnSFX
+@onready var hit_sfx := $HitSFX
+@onready var stand_sfx := $StandSFX
 
-var dealer_turn_active:= false
+var dealer_turn_active := false # this variable may be useless, look into it later
+
 
 func _ready() -> void:
 	center_screen_x = get_viewport().size.x / 2
@@ -34,7 +38,6 @@ func _ready() -> void:
 	add_child(dealer_card_stack)
 	dealer_card_stack.set_player_and_position(Global.belongs_to.DEALER)
 
-
 	connect("dealer_finished_turn", Callable(self, "stand"))
 
 	setup_game()
@@ -50,43 +53,39 @@ func setup_game() -> void:
 	return_cards_to_deck(dealer_card_stack)
 	deck.deck = Global.default_deck
 	deck.deck.shuffle()
+
 	# generateDebugDeck() # uncomment for testing purposes only
 	draw_starting_hands()
 	set_buttons_on(true)
 
-
-# uncomment for testing purposes only
-# func generateDebugDeck() -> void:
-# 	# for testing purposes only. a deck that always gives the dealer a score under 19 after the dealer flips the facedown and hits once, and the player has a score of 20 on the initial draw
-# 	deck.deck = [
-# 		"5D", "5H",  # player cards
-# 		"2C", "2S",
-# 		"10H", "10D",
-# 		"2H", "2D", "3C", "3D", "3H", "3S", "4C", "4D", "4H", "4S", 
-# 	]
-
 func draw_starting_hands() -> void:
-	# Player gets 2 cards
-	Global.player_turn = Global.belongs_to.PLAYER
-	deck.draw_card()
-	deck.set_not_drawing()
-	deck.draw_card()
-	deck.set_not_drawing()
-	
-	# Dealer gets 2 cards (1 hidden)
-	Global.player_turn = Global.belongs_to.DEALER
-	deck.draw_card()
-	deck.set_not_drawing()
-	deck.draw_card(true) # true = facedown card
-	deck.set_not_drawing()
 
+	_draw_starting_hand(Global.belongs_to.PLAYER)
+	# delay until the sound effect is done playing
+
+	_draw_starting_hand(Global.belongs_to.DEALER)
 
 	# Back to player turn for actual gameplay
 	Global.player_turn = Global.belongs_to.PLAYER
 	player_card_stack.update_score()
 	dealer_card_stack.update_score()
 	update_text_with_score(player_score, player_card_stack)
-	dealer_score.text = "Score: "  + str(dealer_card_stack.calculate_score(true)) 
+	dealer_score.text = "Score: "  + str(dealer_card_stack.calculate_score(true))
+
+func _draw_starting_hand(chosen_player: int) -> void:
+	var card_stack := player_card_stack if (chosen_player == Global.belongs_to.PLAYER) else dealer_card_stack
+	Global.player_turn = chosen_player
+	deck.draw_card()
+	deck.set_not_drawing()
+	if chosen_player == Global.belongs_to.PLAYER:
+		deck.draw_card()
+	else:
+		deck.draw_card(true) # true = facedown card
+	deck.set_not_drawing()
+	play_card_drawn_sfx()
+
+func play_card_drawn_sfx() -> void:
+	card_drawn_sfx.play()
 
 func return_cards_to_deck(stack: CardStack) -> void:
 	# delete nodes from scenes entirely
@@ -104,18 +103,18 @@ func add_card_to_hand(card: Card) -> void:
 	hand.add_card(card)
 
 func on_hit_pressed() -> void:
+	hit_sfx.play()
 	var new_card := deck.draw_card()
 	new_card.connect("flipped_up", Callable(self, "_buttons_on"))
 	deck.set_not_drawing()
 	set_buttons_on(false)
-	print("BUTTONS VISIBLE:", hit_button.visible, stand_button.visible)
 	player_card_stack.update_score()
+	play_card_drawn_sfx()
 	if player_card_stack.lost_game(): # if score > 21 force the player to stand
 		stand()
 	if Global.player_turn == Global.belongs_to.PLAYER:
 		update_text_with_score(player_score, player_card_stack)
 		# set_buttons_on(true)
-		print("BUTTONS VISIBLE:", hit_button.visible, stand_button.visible)
 	else:
 		update_text_with_score(dealer_score, dealer_card_stack)
 	
@@ -124,6 +123,7 @@ func on_stand_pressed() -> void:
 
 func stand() -> void:
 	if Global.player_turn == Global.belongs_to.PLAYER:
+		stand_sfx.play()
 		player_card_stack.update_score()
 		update_text_with_score(player_score, player_card_stack)
 		Global.player_turn = Global.belongs_to.DEALER
@@ -201,7 +201,8 @@ func _dealer_next_action() -> void:
 		new_card.connect("flipped_up", Callable(self, "_on_dealer_card_finished")) 
 		dealer_card_stack.update_score()
 		update_text_with_score(dealer_score, dealer_card_stack)
-		new_card.flip() 
+		play_card_drawn_sfx()
+		new_card.flip()
 	else:
 		dealer_turn_active = false
 		dealer_card_stack.update_score()
@@ -209,7 +210,6 @@ func _dealer_next_action() -> void:
 		emit_signal("dealer_finished_turn")
 
 func _on_dealer_card_finished() -> void:
-	print("flipped_up signal received for dealer card")
 	deck.set_not_drawing()
 	_dealer_next_action() # this is where the error is in case i forget!!!
 
@@ -222,3 +222,15 @@ func dealer_should_draw() -> bool: # TODO program an AI here
 	if ds > player_card_stack.get_score(): # if the dealer won already
 		return false
 	return dealer_card_stack.get_score() < 19 # otherwise take a chance to win
+
+### DEBUG CODE ###
+
+# uncomment for testing purposes only
+# func generateDebugDeck() -> void:
+# 	# for testing purposes only. a deck that always gives the dealer a score under 19 after the dealer flips the facedown and hits once, and the player has a score of 20 on the initial draw
+# 	deck.deck = [
+# 		"5D", "5H",  # player cards
+# 		"2C", "2S",
+# 		"10H", "10D",
+# 		"2H", "2D", "3C", "3D", "3H", "3S", "4C", "4D", "4H", "4S", 
+# 	]
