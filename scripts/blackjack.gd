@@ -20,7 +20,6 @@ var center_screen_x: float
 
 var dealer_turn_active := false # this variable may be useless, look into it later
 
-
 func _ready() -> void:
 	center_screen_x = get_viewport().size.x / 2
 	
