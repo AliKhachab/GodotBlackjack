@@ -17,6 +17,7 @@ var center_screen_x: float
 @onready var card_drawn_sfx := $CardDrawnSFX
 @onready var hit_sfx := $HitSFX
 @onready var stand_sfx := $StandSFX
+@onready var settings_menu: SettingsMenu = $CanvasLayer/PauseMenu/SettingsMenu
 
 var dealer_turn_active := false # this variable may be useless, look into it later
 
@@ -38,6 +39,8 @@ func _ready() -> void:
 	dealer_card_stack.set_player_and_position(Global.belongs_to.DEALER)
 
 	connect("dealer_finished_turn", Callable(self, "stand"))
+
+	settings_menu.set_slider_defaults()
 
 	setup_game()
 
