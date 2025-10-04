@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bhq24fgnlc0j6"]
+
+[ext_resource type="Script" uid="uid://c1n2bcuwbsbyo" path="res://scripts/audio_h_slider.gd" id="1_8jbbo"]
+
+[node name="HSlider" type="HSlider"]
+offset_right = 8.0
+offset_bottom = 16.0
+step = 0.1
+script = ExtResource("1_8jbbo")
+
+[connection signal="value_changed" from="." to="." method="_on_value_changed"]

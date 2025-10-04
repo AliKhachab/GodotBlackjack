@@ -1,0 +1,94 @@
+[gd_scene load_steps=4 format=3 uid="uid://33d2sm0r6gmu"]
+
+[ext_resource type="Script" uid="uid://c1n2bcuwbsbyo" path="res://scripts/audio_h_slider.gd" id="1_05p07"]
+[ext_resource type="Script" uid="uid://bmnpydjiyay0k" path="res://scripts/settings_menu.gd" id="1_cr101"]
+[ext_resource type="Theme" uid="uid://q7gyfh33bbhn" path="res://themes/Default Button.tres" id="3_wswnh"]
+
+[node name="SettingsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cr101")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.203922)
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -108.0
+offset_top = -75.5
+offset_right = 108.0
+offset_bottom = 75.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="MasterLabel" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Master"
+
+[node name="MasterAudioSlider" type="HSlider" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+value = 100.0
+tick_count = 10
+script = ExtResource("1_05p07")
+bus_name = "Master"
+metadata/_custom_type_script = "uid://c1n2bcuwbsbyo"
+
+[node name="SFXLabel" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Sound Effects"
+
+[node name="SFXAudioSlider" type="HSlider" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+value = 75.0
+tick_count = 10
+script = ExtResource("1_05p07")
+bus_name = "SFX"
+metadata/_custom_type_script = "uid://c1n2bcuwbsbyo"
+
+[node name="MuslcLabel" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Music (TBA)"
+
+[node name="MusicAudioSlider" type="HSlider" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+value = 75.0
+tick_count = 10
+script = ExtResource("1_05p07")
+bus_name = "Music"
+metadata/_custom_type_script = "uid://c1n2bcuwbsbyo"
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -308.0
+offset_top = -184.0
+offset_right = -140.0
+offset_bottom = -136.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_wswnh")
+text = "< Back"
+
+[connection signal="pressed" from="Button" to="." method="_on_back_button_pressed"]
