@@ -32,7 +32,7 @@ func on_hovered_off_card(card):
 			highlight_card(new_card_hovered, true)
 		else:
 			is_hovering_on_card = false 
-			
+
 func raycast_check_for_card():
 	var space_state = get_world_2d().direct_space_state
 	var parameters = PhysicsPointQueryParameters2D.new()
